@@ -32,3 +32,6 @@ netcdf output files returned by the rpgpy reader ([https://github.com/actris-clo
 If you find a bug or have ideas for improvements, or want to help develop peako, please contact one of the authors. Your
  input will for sure be appreciated! 
 
+## RF - Contribution
+A few modifications have been applied to read the WProf data properly. 
+
