@@ -1828,6 +1828,8 @@ class TrainingData(object):
             xlim_pair += [-1, +1]
             xlim = xlim_pair
             
+            velbins = velbins[:,0]
+            
             # if this spectrum is not empty, we plot 3x3 panels with shared x and y axes
             fig, ax = plt.subplots(3, 3, figsize=[11, 11], sharex=True, sharey=True)
             fig.suptitle(f'Mark peaks in the center panel spectrum. Fig. {self.plot_count[n_file] + 1} out of '
@@ -1854,7 +1856,7 @@ class TrainingData(object):
                             comment = comment + ' (time or range boundary)'
 
                         ax[dim1, dim2].plot(velbins, utils.lin2z(thisSpectrum.values))
-                        ax[dim1, dim2].set_xlim(xlim)
+                        ax[dim1, dim2].set_xlim(xlim[0:2])
                         ax[dim1, dim2].set_title(f'range:'
                                                  f'{np.round(self.spec_data[n_file]["range_layers"].values[int(heightindex)] / 1000, 2)} km,'
                                                  f' time: {utils.format_hms(self.spec_data[n_file]["time"].values[int(timeindex)])}' + comment,
