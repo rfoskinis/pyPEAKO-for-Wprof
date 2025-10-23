@@ -1,0 +1,14 @@
+numpy>=1.16
+scipy>=1.2
+netCDF4>=1.4.2
+matplotlib>=3.0.2
+xarray
+requests
+dask[complete]
+scikit-learn
+ipympl
+
+[dev]
+pytest>=3.7
+check-manifest
+twine
