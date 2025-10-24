@@ -1,5 +1,5 @@
 import warnings
-
+import pandas as pd
 import xarray as xr
 import scipy
 import numpy as np
@@ -1820,15 +1820,22 @@ class TrainingData(object):
         this_spectrum_center = self.spec_data[n_file]['doppler_spectrum'][int(timeindex_center),
                                int(heightindex_center),
                                :]
+        
+        Zero_spectrum = self.spec_data[n_file]['doppler_spectrum'][int(0),int(0),:]       
+        
+        Zero_spectrum_dBz = 10 * np.log10(Zero_spectrum)
+
         # print(f'time index center: {timeindex_center}, height index center: {heightindex_center}')
         if not np.sum(~np.isnan(this_spectrum_center.values)) < 2:
             velbins = self.spec_data[n_file]['velocity_vectors'][c_ind - 1, :]
+            
             xlim = velbins.values[~np.isnan(this_spectrum_center.values) & ~(this_spectrum_center.values == 0)][[0, -1]]
-            xlim_pair = [xlim[0, 0], xlim[1, 0]]
+#            xlim_pair = [xlim[0, 0], xlim[1, 0]]
+            xlim_pair = [int(-3), int(3)]
             xlim_pair += [-1, +1]
             xlim = xlim_pair
-            
             velbins = velbins[:,0]
+           
             
             # if this spectrum is not empty, we plot 3x3 panels with shared x and y axes
             fig, ax = plt.subplots(3, 3, figsize=[11, 11], sharex=True, sharey=True)
@@ -1854,6 +1861,14 @@ class TrainingData(object):
                         if heightindex == -1 or timeindex == -1:
                             thisSpectrum = thisSpectrum.where(thisSpectrum.values == -999)
                             comment = comment + ' (time or range boundary)'
+
+                        ## inspect the Spectrum
+                        #df = pd.DataFrame({
+                        #    'velocity': velbins.values,
+                        #    'spectrum': thisSpectrum.values
+                        #})
+                        #print(df.to_string(index=False))   # δείχνει όλες τις γραμμές
+                        #df.to_csv('spectrum.csv', index=False)
 
                         ax[dim1, dim2].plot(velbins, utils.lin2z(thisSpectrum.values))
                         ax[dim1, dim2].set_xlim(xlim[0:2])
@@ -2016,6 +2031,8 @@ class TrainingData(object):
         n_rg = self.spec_data[n_file]['chirp_start_indices']
         c_ind = np.digitize(self.heightindex_center, n_rg)
         velbins = self.spec_data[n_file]['velocity_vectors'][c_ind - 1, :]
+        velbins = velbins[:,0]
+
         xlim = velbins.values[~np.isnan(this_spectrum_center.values) & ~(this_spectrum_center.values == 0)][
                 [0, -1]]
         xlim += [-1, +1]  # Extend limits for better visibility
